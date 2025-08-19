@@ -1,0 +1,25 @@
+Generating counterexamples for loop invariant violation...
+Looking for cases where either 7 <= y or 191 >= 7*x fails
+
+Generating counterexamples for assertion failure...
+Looking for cases where 191 >= 7*(x + 1) fails
+
+Counterexample 1:
+x = 27
+Violation: 191 >= 7*(27 + 1) is false (7*(27+1) = 196)
+
+Counterexample 2:
+x = 28
+Violation: 191 >= 7*(28 + 1) is false (7*(28+1) = 203)
+
+Counterexample 3:
+x = 29
+Violation: 191 >= 7*(29 + 1) is false (7*(29+1) = 210)
+
+Counterexample 4:
+x = 30
+Violation: 191 >= 7*(30 + 1) is false (7*(30+1) = 217)
+
+Counterexample 5:
+x = 31
+Violation: 191 >= 7*(31 + 1) is false (7*(31+1) = 224)

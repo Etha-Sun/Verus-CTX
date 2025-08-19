@@ -1,0 +1,64 @@
+Let me analyze and fix this proof step by step.
+
+1. Error Analysis:
+- The first error shows the loop invariant `7 <= y` is not maintained at the end of the loop body.
+- The second error shows the assertion `191 >= 7 * (x + 1)` fails, which is related to the loop's termination condition.
+
+The core issue is that the invariants don't properly capture the relationship between x and y throughout the loop's execution. The loop calculates how many times 7 fits into 191 (x) and the remainder (y).
+
+2. Repair Strategy:
+We need to strengthen the invariants to:
+- Maintain the mathematical relationship between x and y (y = 191 - 7*x)
+- Ensure x never exceeds the point where 7*x would exceed 191
+- Keep y within bounds (7 ≤ y initially, but this changes as the loop progresses)
+
+The key is to recognize that the loop condition `7 <= y` will eventually become false, so we need invariants that work both during and after the loop.
+
+3. Corrected Code:
+```rust
+use vstd::prelude::*;
+
+verus! {
+
+#[verifier::loop_isolation(false)]
+fn cal_div() -> (r: (u32, u32))
+    ensures
+        r.0 == 27,
+        r.1 == 2,
+{
+    let mut x: u32 = 0;
+    let mut y: u32 = 191;
+    while 7 <= y
+    invariant
+        y == 191 - 7 * x,
+        x <= 27,
+    decreases y
+    {
+        assert(x < 28); // Ensure x doesn't go beyond 27
+
+        // Assert the bound before updating y
+        // This prevents underflow by ensuring that the result is always non-negative
+        assert(191 >= 7 * (x + 1));
+
+        x = x + 1;
+        y = 191 - 7 * x;
+    }
+    (x, y)
+}
+
+} // verus!
+
+fn main() {}
+```
+
+Key changes made:
+1. Replaced `7 <= y` invariant with `y == 191 - 7 * x` to maintain the exact relationship between x and y
+2. Added `x <= 27` as an invariant to ensure x never exceeds the maximum value where 7*x ≤ 191
+3. Kept the decreases clause since y is still decreasing
+
+The new invariants properly capture:
+- The mathematical relationship between x and y
+- The upper bound on x
+- The termination condition (when y < 7)
+
+This should now verify correctly while maintaining all the original functionality and postconditions.
