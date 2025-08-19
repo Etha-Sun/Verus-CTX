@@ -2,7 +2,7 @@ use vstd::prelude::*;
 fn main() {}
 
 verus!{
-
+#[verifier::external_body]
 pub fn myfun(a: &mut Vec<i32>, sum: &mut Vec<i32>, N: i32)
     requires
         N > 0,

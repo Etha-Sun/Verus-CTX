@@ -35,6 +35,7 @@ fn tail_triangle(n: u32, idx: u32, sum: &mut u32)
         triangle(n as nat) < 0x1_0000_0000,
     ensures
         *sum == triangle(n as nat),
+    decreases n - idx,
 {
     if idx < n {
         let idx = idx + 1;
